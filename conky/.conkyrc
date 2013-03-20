@@ -1,0 +1,115 @@
+alignment top_right
+background yes
+border_inner_margin 0
+border_outer_margin 0
+border_width 5
+cpu_avg_samples 2
+default_bar_size 0 6
+default_color green
+default_graph_size 0 10
+default_color green
+default_shade_color/ white
+default_outline_color gray
+disable_auto_reload no
+diskio_avg_samples 2
+double_buffer yes
+draw_borders no
+draw_graph_borders yes
+draw_outline no
+draw_shades no
+extra_newline yes
+format_human_readable yes
+gap_x 00
+gap_y 00
+hddtemp_host 127.0.0.1
+hddtemp_port 7634
+max_text_width 0
+maximum_width 220
+minimum_size 210 5
+net_avg_samples 2
+no_buffers yes
+override_utf8_locale yes
+own_window yes
+#own_window_argb_visual yes
+#own_window_argb_value 100
+own_window_class Conky
+own_window_colour black
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+own_window_transparent yes
+own_window_type normal
+short_units yes
+temperature_unit celsius
+total_run_times 0
+update_interval 2.0
+#update_interval_on_battery 5.0
+uppercase no
+use_xft yes
+use_spacer left
+xftfont HandelGotD:size=8
+xftalpha 0.5
+
+TEXT
+${color white}
+${font :bold:size=8}SYSTEM ${hr 2}${font :normal:size=8}
+ $sysname $kernel $alignr $machine
+ Hostname $alignr $nodename
+ IP address $alignr ${addr eth0}
+ Uptime $alignr $uptime
+ Load $alignr $loadavg
+ Temp ${alignr} HDD (${hddtemp})
+
+${font :bold:size=8}PROCESSORS ${hr 2}${font :normal:size=8}
+ ${cpugraph cpu0 ff0000 ff00ff -t}
+ CPU1 ${cpu cpu1}% ${cpubar cpu1}
+ CPU2 ${cpu cpu2}% ${cpubar cpu2}
+ CPU3 ${cpu cpu3}% ${cpubar cpu3}
+ CPU4 ${cpu cpu4}% ${cpubar cpu4}
+ CPU5 ${cpu cpu5}% ${cpubar cpu5}
+ CPU6 ${cpu cpu6}% ${cpubar cpu6}
+ CPU7 ${cpu cpu7}% ${cpubar cpu7}
+ CPU8 ${cpu cpu8}% ${cpubar cpu8}
+ ${top name 1} $alignr ${top pid 1} ${top cpu 1} %
+ ${top name 2} $alignr ${top pid 2} ${top cpu 2} %
+ ${top name 3} $alignr ${top pid 3} ${top cpu 3} %
+ ${top name 4} $alignr ${top pid 4} ${top cpu 4} %
+ ${top name 5} $alignr ${top pid 5} ${top cpu 5} %
+ ${top name 6} $alignr ${top pid 6} ${top cpu 6} %
+ ${top name 7} $alignr ${top pid 7} ${top cpu 7} %
+ ${top name 8} $alignr ${top pid 8} ${top cpu 8} %
+ ${top name 9} $alignr ${top pid 9} ${top cpu 9} %
+ PROCS: $processes ($running_processes) ${alignr} THRDS: $threads ($running_threads)
+
+${font :bold:size=8}MEMORY ${hr 2}${font :normal:size=8}
+ RAM $alignc $mem / $memmax $alignr $memperc%
+ $membar
+#SWAP $alignc $swap / $swapmax $alignr $swapperc%
+# ${swapbar}
+ ${top_mem name 1} $alignr ${top mem 1} %
+ ${top_mem name 2} $alignr ${top mem 2} %
+ ${top_mem name 3} $alignr ${top mem 3} %
+ ${top_mem name 4} $alignr ${top mem 4} %
+ ${top_mem name 5} $alignr ${top mem 5} %
+ ${top_mem name 6} $alignr ${top mem 6} %
+ ${top_mem name 7} $alignr ${top mem 7} %
+ ${top_mem name 8} $alignr ${top mem 8} %
+ ${top_mem name 9} $alignr ${top mem 9} %
+ MEMbuff ${buffers} $alignr MEMcach ${cached}
+
+${font :bold:size=8}DISKS ${hr 2}${font :normal:size=8}
+ / $alignc ${fs_used /} / ${fs_size /} $alignr ${fs_free_perc /}%
+ ${fs_bar /}
+ /home $alignc ${fs_used /home} / ${fs_size /home} $alignr ${fs_free_perc /home}%
+ ${fs_bar /home}
+#/mnt/public $alignc ${fs_used /mnt/sda4} / ${fs_size /mnt/sda4} $alignr ${fs_free_perc /mnt/sda4}%
+#${fs_bar /mnt/sda4}
+
+${font :bold:size=8}DISK IO ${hr 2}${font :normal:size=8}
+ Read: ${diskio_read /dev/sda} ${alignr} Write: ${diskio_write /dev/sda}
+ ${diskiograph /dev/sda ff0000 ff00ff -t} 
+
+${font :bold:size=8}NETWORK ${hr 2}${font :normal:size=8}
+ Up: ${upspeed eth0}b/s ${alignr} ${alignr} Total: ${totalup eth0}
+ ${upspeedgraph eth0 ff0000 ff00ff -t}
+ Down: ${downspeed eth0}b/s ${alignr} ${alignr} Total: ${totaldown eth0}
+ ${downspeedgraph eth0 ff0000 ff00ff -t}
+
