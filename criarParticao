@@ -1,0 +1,2 @@
+ 2029  sudo mkfs.ext4 /dev/sdb1
+ 2030  sudo mount /dev/sdb1 /media/william
