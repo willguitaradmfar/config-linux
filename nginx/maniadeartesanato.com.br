@@ -1,0 +1,49 @@
+server {
+       listen 80;
+       server_name www.maniadeartesanato.com.br maniadeartesanato.com.br;
+       root /usr/share/nginx/www/maniadeartesanato.com.br_wordpress;
+       if ($http_host != "maniadeartesanato.com.br") {
+                 rewrite ^ http://maniadeartesanato.com.br$request_uri permanent;
+       }
+       index index.php index.html index.htm default.html default.htm;
+       location = /favicon.ico {
+                log_not_found off;
+                access_log off;
+       }
+       location = /robots.txt {
+                allow all;
+                log_not_found off;
+                access_log off;
+       }
+       # deny running scripts inside writable directories
+       location ~* /(images|cache|media|logs|tmp)/.*\.(php|pl|py|jsp|asp|sh|cgi)$ {
+                return 403;
+                error_page 403 /403_error.html;
+       }
+       # Deny all attempts to access hidden files such as .htaccess, .htpasswd, .DS_Store (Mac).
+       location ~ /\. {
+                deny all;
+                access_log off;
+                log_not_found off;
+       }
+       location / {
+                try_files $uri $uri/ /index.php?q=$uri&$args;
+       }
+       # caching of files
+       location ~* \.(ico|pdf|flv)$ {
+                expires 1y;
+       }
+       location ~* \.(js|css|png|jpg|jpeg|gif|swf|xml|txt)$ {
+                expires 1y;
+       }
+       location ~ \.php$ {
+                try_files $uri =404;
+		limit_req   zone=one  burst=5;
+                include /etc/nginx/fastcgi_params;
+                fastcgi_pass 127.0.0.1:9000;
+                fastcgi_index index.php;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+       }
+
+}
+
