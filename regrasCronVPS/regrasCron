@@ -1,0 +1,8 @@
+sudo iptables -F 
+sudo iptables -A INPUT -d 216.59.16.11 -p tcp --destination-port 0:21 -j REJECT 
+sudo iptables -A INPUT -d 216.59.16.11 -p tcp --destination-port 23:79 -j REJECT
+sudo iptables -A INPUT -d 216.59.16.11 -p tcp --destination-port 81:8079 -j REJECT
+sudo iptables -A INPUT -d 216.59.16.11 -p tcp --destination-port 8090:56000 -j REJECT
+sudo iptables -L
+
+
