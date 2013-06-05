@@ -1,0 +1,12 @@
+which curl || apt-get install curl
+
+#retorna status code
+statuscode=$(curl --verbose $1 2>&1 | sed -rn 's!^< HTTP/.* ([[:digit:]]+).*!\1!p')
+
+case "$statuscode" in
+    200) echo 'Success!'
+         ;;
+      *) echo 'Fail!'
+         exit 1
+         ;;
+esac
