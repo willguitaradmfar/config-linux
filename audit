@@ -1,0 +1,182 @@
+#!/bin/bash
+
+# 
+# cipheraudit
+# 
+# v0.1   - 2010-12-20 - http://superuser.com/questions/109213/is-there-a-tool-that-can-test-what-ssl-tls-cipher-suites-a-particular-website-off/224263#224263
+# v0.2   - 2011-09-27 - Morgan Aldridge <morgant@makkintosshu.com>
+#                       Modernized bash, show which suite the tested cypher belongs to, made
+#                       stand-alone tool requiring no editing to test different hosts/ports.
+# v0.3   - 2012-04-30 - Morgan Aldridge
+#                       Added support for the SMTP protocol.
+# 
+
+server=''
+port=''
+protocol=''
+verbose=false
+delay=1
+ciphers=$(openssl ciphers 'ALL:eNULL:aNULL' | sed -e 's/:/ /g')
+highSuite=$(openssl ciphers 'HIGH' | sed -e 's/:/ /g')
+mediumSuite=$(openssl ciphers 'MEDIUM' | sed -e 's/:/ /g')
+lowSuite=$(openssl ciphers 'LOW' | sed -e 's/:/ /g')
+noEncryptSuite=$(openssl ciphers 'eNULL' | sed -e 's/:/ /g')
+noAuthSuite=$(openssl ciphers 'aNULL' | sed -e 's/:/ /g')
+
+echo "Obtained cipher list from $(openssl version)."
+
+# print usage instructions
+function usage() {
+	echo "Usage: $0 [options] [-p http|smtp|imap] server port"
+	echo "  -h      print these usage instructions"
+	echo "  -v      verbose output"
+	echo "  -p      protocol to test (default: 'http')"
+	echo "  server  IP address or FQDN of the server to test"
+	echo "  port    port number of the service to test"
+}
+
+function in_array()
+{
+	local hay
+	needle=$1
+	shift
+	# array() undefined
+	[ -z "$1" ] && return 1
+	for hay in $*; do
+		[ "$hay" == "$needle" ] && return 0
+	done
+	return 1
+}
+
+function max_strlen_in_array()
+{
+	local str
+	local len=0
+	
+	for str in $*; do
+		if [ "${#str}" -gt "$len" ]; then
+			len="${#str}"
+		fi
+	done
+	
+	return $len
+}
+
+function max_pretty_cipher_strlen()
+{
+	local len=0
+	local maxCiphersLen=0
+	local maxAliasLen=0
+	
+	max_strlen_in_array ${ciphers[@]}
+	maxCipherLen=$?
+	max_strlen_in_array HIGH MEDIUM LOW eNULL aNULL UNKNOWN
+	maxAliasLen=$?
+	
+	# cipher name + space + open parentheses + alias name + close parentheses + ellipses:
+	# <cipher> (<alias>)...
+	len=$(( $maxCipherLen + $maxAliasLen + 6 ))
+	
+	return $len
+}
+
+# handle arguments
+if [ $# -gt 0 ]; then
+	while [ $# -gt 0 ]; do
+		# requesting help?
+		if [ "$1" = "-h" ]; then
+			# print usage and exit
+			usage
+			exit 0
+		# requesting verbose output?
+		elif [ "$1" = "-v" ]; then
+			verbose=true
+			shift
+		# handle protocol
+		elif [ "$1" = "-p" ]; then
+			shift
+			case "$1" in
+				http)
+					# don't actually need to do anything here, just need to validate it as an option
+					;;
+				smtp)
+					protocol="-starttls smtp -crlf"
+					;;
+				imap)
+					protocol="-starttls imap -crlf"
+					;;
+				*)
+					echo "ERROR: Unknown protocol '$1' specified! Unable to proceed!"
+					exit 1
+					;;
+			esac
+			shift
+		# handle server & port arguments
+		else
+			server="$1"
+			shift
+			port="$1"
+			shift
+		fi
+	done
+else
+	usage
+	exit 1;
+fi
+
+max_pretty_cipher_strlen
+maxPrettyCipherLen=$?
+echo "Testing ciphers on $server:$port..."
+for cipher in ${ciphers[@]}; do
+	# display the cipher name & suite
+	prettyCipher="$cipher ("
+	if in_array "$cipher" "${highSuite[@]}" ; then
+		prettyCipher="${prettyCipher}HIGH"
+	elif in_array "$cipher" "${mediumSuite[@]}" ; then
+		prettyCipher="${prettyCipher}MEDIUM"
+	elif in_array "$cipher" "${lowSuite[@]}" ; then
+		prettyCipher="${prettyCipher}LOW"
+	elif in_array "$cipher" "${noEncryptSuite[@]}" ; then
+		prettyCipher="${prettyCipher}eNULL"
+	elif in_array "$cipher" "${noAuthSuite[@]}" ; then
+		prettyCipher="${prettyCipher}aNULL"
+	else
+		prettyCipher="${prettyCipher}UNKNOWN"
+	fi
+	prettyCipher="${prettyCipher})..."
+	printf "%-${maxPrettyCipherLen}s " "$prettyCipher"
+	
+	# test the cipher under 
+	result=$(echo -n | openssl s_client $protocol -cipher "$cipher" -connect "$server:$port" 2>&1)
+	if [[ "$result" =~ "Cipher is " ]] ; then
+		echo "YES"
+	else
+		if [[ "$result" =~ ":error:" ]] ; then
+			echo "NO"
+			if $verbose; then
+				error=$(echo -n "$result" | cut -d ':' -f6)
+				printf "\t"
+				echo $error
+			fi
+		else
+			echo "UNKNOWN RESPONSE"
+			echo "$result"
+		fi
+	fi
+	sleep $delay
+done
+
+echo -n "Testing SSLv2 support on $server:$port... " 
+result=$(echo -n | openssl s_client -ssl2 $protocol -connect "$server:$port" 2>&1)
+if [[ "$result" =~ "Cipher is" ]] ; then
+	echo "Supported. INSECURE!"
+else
+	echo "Unsupported. (Secure.)"
+fi
+if $verbose; then
+	error=$(echo -n "$result" | cut -d ':' -f6)
+	printf "\t"
+	echo $error
+fi
+echo -n "Testing SSL secure renegotiation on $server:$port... "
+echo -n "" | openssl s_client $protocol -connect "$server:$port" 2>&1 | grep 'Secure Renegotiation'
