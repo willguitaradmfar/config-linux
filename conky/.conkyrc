@@ -49,7 +49,7 @@ xftfont HandelGotD:size=8
 xftalpha 0.5
 
 TEXT
-${color white}
+${color black}
 ${font :bold:size=8}SYSTEM ${hr 2}${font :normal:size=8}
  $sysname $kernel $alignr $machine
  Hostname $alignr $nodename
@@ -105,11 +105,17 @@ ${font :bold:size=8}DISKS ${hr 2}${font :normal:size=8}
 
 ${font :bold:size=8}DISK IO ${hr 2}${font :normal:size=8}
  Read: ${diskio_read /dev/sda} ${alignr} Write: ${diskio_write /dev/sda}
- ${diskiograph /dev/sda ff0000 ff00ff -t} 
+ ${diskiograph /dev/sda ff01777777777777777777775 ff00ff -t} 
 
 ${font :bold:size=8}NETWORK ${hr 2}${font :normal:size=8}
  Up: ${upspeed eth0}b/s ${alignr} ${alignr} Total: ${totalup eth0}
  ${upspeedgraph eth0 ff0000 ff00ff -t}
  Down: ${downspeed eth0}b/s ${alignr} ${alignr} Total: ${totaldown eth0}
  ${downspeedgraph eth0 ff0000 ff00ff -t}
+${font :bold:size=8}LO ${hr 2}${font :normal:size=8}
+ Up: ${upspeed lo}b/s ${alignr} ${alignr} Total: ${totalup lo}
+ ${upspeedgraph lo ff0000 ff00ff -t}
+ Down: ${downspeed lo}b/s ${alignr} ${alignr} Total: ${totaldown lo}
+ ${downspeedgraph lo ff0000 ff00ff -t}
 
+#${curl https://google.com 1}
