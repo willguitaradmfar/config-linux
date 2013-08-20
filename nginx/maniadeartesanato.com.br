@@ -1,7 +1,7 @@
 server {
        listen 80;
        server_name www.maniadeartesanato.com.br maniadeartesanato.com.br;
-       root /usr/share/nginx/www/maniadeartesanato.com.br_wordpress;
+       root /var/www/maniadeartesanato.com.br/web;
        if ($http_host != "maniadeartesanato.com.br") {
                  rewrite ^ http://maniadeartesanato.com.br$request_uri permanent;
        }
