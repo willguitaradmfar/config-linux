@@ -1,5 +1,6 @@
 server {
        listen 80;
+       client_max_body_size 20M;
        server_name www.prantoniomarques.com.br prantoniomarques.com.br;
        root /var/www/prantoniomarques.com.br/web;
        if ($http_host = "www.prantoniomarques.com.br") {

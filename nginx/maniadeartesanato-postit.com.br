@@ -9,6 +9,7 @@ map $http_upgrade $connection_upgrade {
 
 server {
     listen 80;
+    client_max_body_size 20M;
     server_name www.maniadeartesanato.com.br maniadeartesanato.com.br;
     if ($http_host = "www.maniadeartesanato.com.br") {
              rewrite ^ http://maniadeartesanato.com.br$request_uri permanent;

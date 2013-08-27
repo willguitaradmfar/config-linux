@@ -9,6 +9,7 @@ map $http_upgrade $connection_upgrade {
 
 server {
     listen 80;
+    client_max_body_size 20M;
     server_name www.marciabraga.com.br marciabraga.com.br;
     if ($http_host = "www.marciabraga.com.br") {
              rewrite ^ http://marciabraga.com.br$request_uri permanent;
