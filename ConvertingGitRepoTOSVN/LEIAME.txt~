@@ -12,3 +12,18 @@ sudo apt-get install mercurial python-subversion
 //ESSE COMANDO IRA CRIAR DUAS PASTAS CONTENDO TODO HISTORY COMMIT DO GIT NO FORMATO SVN
 
 hg convert --dest-type svn path/to/git/repo 
+
+
+//O COMANDO ABAIXO FAZ DUMP DA PASTA LOCAL CRIADA ACIMA 
+
+svnadmin dump totvs-serranif-merge-hg/ > repo_svn.dump
+
+
+//O COMANDO ABAIXO CARREGA O DUMP PARA O SERVIDOR DESTINO, SENDO NECESSÁRIO ESTAR NO LOCAL
+
+svnadmin load tmp/  < repo_svn.dump
+
+
+//O COMANDO ABAIXO CRIA UM REPOSITORIO 
+
+svn mkdir --parents https://code.totvs.com:8443/svn/paths.... -m "Importing git repo"
