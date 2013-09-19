@@ -1,0 +1,237 @@
+###########
+## FONTS ##
+###########
+# X font when Xft is disabled, you can pick one with program xfontsel
+font Matrix
+
+# Use Xft?
+use_xft yes
+
+# Xft font when Xft is enabled
+xftfont Bitstream Vera Sans Mono:size=11
+
+# Text alpha when using Xft
+xftalpha 0.8
+
+###########
+# HDDTEMP #
+###########
+hddtemp_host 127.0.0.1
+hddtemp_port 7634
+
+##########
+## MAIL ##
+##########
+# mail spool
+mail_spool $MAIL
+
+#############
+## GENERAL ##
+#############
+# Update interval in seconds
+update_interval 5.0
+
+# This is the number of times Conky will update before quitting.
+# Set to zero to run forever.
+total_run_times 0
+
+# set to yes if you want Conky to be forked in the background
+background no
+
+# pad percentages to 2 digits
+pad_percents 2
+
+# short units
+short_units yes
+
+# Subtract file system buffers from used memory?
+no_buffers yes
+
+# define ip_up strictness
+if_up_strictness address
+
+# number of cpu samples to average
+# set to 1 to disable averaging
+cpu_avg_samples 2
+
+# number of net samples to average
+# set to 1 to disable averaging
+net_avg_samples 2
+
+# Force UTF8? note that UTF8 support required XFT
+override_utf8_locale yes
+
+
+############
+## WINDOW ##
+############
+# Create own window instead of using desktop (required in nautilus)
+own_window yes
+
+# If own_window is yes, you may use type normal, desktop or override
+own_window_type override
+
+# Use pseudo transparency with own_window?
+own_window_transparent yes
+
+# If own_window_transparent is set to no, you can set the background colour    here
+own_window_colour hotpink
+
+# If own_window is yes, these window manager hints may be used
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+
+# Use double buffering (reduces flicker, may not work for everyone)
+double_buffer yes
+
+# Minimum size of text area
+maximum_width 315 5
+
+# Minimum size of text area
+minimum_size 280 5
+
+# Draw shades?
+draw_shades yes
+
+# Draw outlines?
+draw_outline no
+
+# Draw borders around text
+draw_borders no
+
+# Draw borders around graphs
+draw_graph_borders yes
+
+# Stippled borders?
+stippled_borders 8
+
+# border width
+border_width 1
+
+# Default colors and also border colors
+default_color white
+default_shade_color black
+default_outline_color white
+
+# Text alignment, other possible values are commented
+alignment top_right
+
+# Gap between borders of screen and text
+# same thing as passing -x at command line
+gap_x 12
+gap_y 35
+
+# set to yes if you want all text to be in uppercase
+uppercase no
+
+# Add spaces to keep things from moving about? This only affects certain objects.
+use_spacer right
+
+# Maximum number of special things, e.g. fonts, offsets, aligns, etc.
+max_specials 512
+# Maximum size of buffer for user text, i.e. below TEXT line.
+max_user_text 16384
+
+#########
+## LUA ##
+#########
+#lua_load scripts/conky_functs.lua
+
+############
+## COLORS ##
+############
+# Fonts
+color0 FFFFFF
+color1 DDAA00
+color2 606060
+color3 C94000
+color5 1282E7
+color4 C6C6C6
+# Graphs
+#color5 2E96FF # CPU
+#color6 BE2707 # DISK
+#color7 FFCF5F # NETWORK
+
+###############
+## TEMPLATES ##
+###############
+
+
+##########
+## TEXT ##
+##########
+# stuff after 'TEXT' will be formatted on screen
+TEXT
+$color ${exec whoami}@$nodename - $sysname $kernel on $machine
+#${hddtemp /dev/sda}
+${voffset 5}${color}System ${color4}${hr 2}
+
+${voffset 5}${color}Uptime:${color2} $uptime${goto 167}${color}Load:${color2} $loadavg 
+# CPU 1 & 2 (Dual Core Systems and above)
+${color2}${cpugraph 0 29,155 1E63A8 2E96FF} $alignr${color2}${cpugraph 1 29,155 1E63A8 2E96FF}
+${voffset -35}${offset 4}${color}${color2}CPU 0 ${goto 100}${color4}${execi 8 sensors | grep 'Core 0' | cut -d' ' -f 11} ${goto 171}${color2}CPU 1 ${goto 273}${color4}${execi 8 sensors | grep 'Core 1' |  cut -d' ' -f 11}
+${offset 4}${color}${freq_g 0} GHz ${color} ${cpu cpu0}% ${color4}${cpubar cpu0 5,60}${goto 171}${color}${freq_g 1} GHz ${color} ${cpu cpu1}% ${color4}${cpubar cpu1 5,60}
+# CPU 2 & 3 (Quad Core Systems Only)
+${color2}${cpugraph 2 29,155 1E63A8 2E96FF} $alignr${color2}${cpugraph 3 29,155 1E63A8 2E96FF}
+${voffset -35}${offset 4}${color}${color2}CPU 2 ${goto 100}${color4}${execi 8 sensors | grep 'Core 2' | cut -d' ' -f 11} ${goto 171}${color2}CPU 3 ${goto 273}${color4}${execi 8 sensors | grep 'Core 3' |  cut -d' ' -f 11}
+${offset 4}${color}${freq_g 2} GHz ${color} ${cpu cpu2}% ${color4}${cpubar cpu2 5,60}${goto 171}${color}${freq_g 3} GHz ${color} ${cpu cpu3}% ${color4}${cpubar cpu3 5,60}
+
+${voffset 6}${color}RAM${goto 33}${color2}${membar 6,60} ${alignc} ${color2}${memperc}% ${alignr}$mem ${color}of $memmax
+${color}SWAP${goto 33}${color2}${swapbar 6,60} ${alignc} ${color2}${swapperc}% ${alignr}$swap ${color}of $swapmax
+${voffset -26}${color2}${goto 150}${memgraph 18,80 66CC00 00CC66}
+${color}Entropy: ${color #606060}${entropy_avail}${color} / ${color #606060}${entropy_poolsize} ${color}${entropy_bar}
+${color}Processes:${color #606060} $processes $color Running:${color #606060} $running_processes ${color} Batt: ${color #606060}${battery}
+${font :size=10}
+${color3}Top CPU${alignc}CPU%     MEM${alignr}PID
+${color1}${top name 1}${alignc}${top cpu 1}      ${top mem 1}${alignr}${top pid 1}
+${color4}${top name 2}${alignc}${top cpu 2}      ${top mem 2}${alignr}${top pid 2}
+${color4}${top name 3}${alignc}${top cpu 3}      ${top mem 3}${alignr}${top pid 3}
+
+${color3}Top Memory usage
+${color1}${top_mem name 1}${alignc}${top_mem cpu 1}      ${top_mem mem 1}${alignr}${top_mem pid 1}
+${color4}${top_mem name 2}${alignc}${top_mem cpu 2}      ${top_mem mem 2}${alignr}${top_mem pid 2}
+${color4}${top_mem name 3}${alignc}${top_mem cpu 3}      ${top_mem mem 3}${alignr}${top_mem pid 3}
+${font} 
+${color}Filesystems ${hr 2}
+
+$color /       ${color #606060}${fs_used /} / ${fs_size /}    ${fs_used_perc /}%   ${fs_bar /}
+$color /home   ${color #606060}${fs_used /home} / ${fs_size /home}    ${fs_used_perc /home}%   ${fs_bar /home}
+$color /var    ${color #606060}${fs_used /var} / ${fs_size /var}    ${fs_used_perc /var}%   ${fs_bar /var}
+$color /usr    ${color #606060}${fs_used /usr} / ${fs_size /usr}    ${fs_used_perc /usr}%   ${fs_bar /usr}
+$color /tmp    ${color #606060}${fs_used /tmp} / ${fs_size /tmp}    ${fs_used_perc /tmp}%   ${fs_bar /tmp}
+
+${color}Physical Drives ${hr 2}
+
+${color2} device   temp${goto 115}read${goto 165}write${goto 210}read${goto 270}write
+${voffset 5}${color} /dev/sda  ${hddtemp /dev/sda}?C${goto 115}${diskio_read /dev/sda}${goto 165}${diskio_write /dev/sda}${voffset -6}${goto 210}${diskiograph_read /dev/sda 15,50 870000 DB0000}${goto 270}${diskiograph_write /dev/sda 15,50 870000 DB0000}
+${color} /dev/sdb  ${hddtemp /dev/sdb}?C${goto 115}${diskio_read /dev/sdb}${goto 165}${diskio_write /dev/sdb}${voffset -6}${goto 210}${diskiograph_read /dev/sdb 15,50 870000 DB0000}${goto 270}${diskiograph_write /dev/sdb 15,50 870000 DB0000}
+#${color} /dev/sdc  ${hddtemp /dev/sdc}?C${goto 115}${diskio_read /dev/sdc}${goto 165}${diskio_write /dev/sdc}${voffset -6}${goto 210}${diskiograph_read /dev/sdc 15,50 870000 DB0000}${goto 270}${diskiograph_write /dev/sdc 15,50 870000 DB0000}
+${color}Networking ${hr 2} 
+${if_up eth0} 
+${color #ddaa00}eth0
+${color #767676}Address:$color ${addr eth0} ${color}${if_up wlan0}(${color #A8A8A8}${wireless_ap eth0}${color})${endif}
+${color #767676}${downspeedgraph eth0 32,155 A87807 FFB60B} $alignr${color #767676}${upspeedgraph eth0 32,155 A87807 FFCF5F}
+${offset 4}${voffset -37}${color #767676}Down:$color ${downspeed eth0} k/s ${goto 171}${color #767676}Up:$color ${upspeed eth0} k/s
+${offset 4}${voffset 0}${color #767676}Total:$color ${totaldown eth0} k/s ${goto 171}${color #767676}Total:$color ${totalup eth0} k/s${endif}${if_up wlan0}
+${color #ddaa00}wlan0 ${color}${wireless_essid wlan0} ${color A8A8A8}(${wireless_mode wlan0})
+${color #767676}Address:$color ${addr wlan0} ${color}(${color #A8A8A8}${wireless_ap wlan0}${color})
+${color #767676}Signal: ${color}${wireless_link_qual wlan0}% ${wireless_link_bar 8,60 wlan0}${goto 171}${color #767676}Bitrate: ${color}${wireless_bitrate wlan0}
+${color #767676}${downspeedgraph wlan0 32,155 A87807 FFB60B} $alignr${color #767676}${upspeedgraph wlan0 32,155 A87807 FFCF5F}
+${offset 4}${voffset -37}${color #767676}Down:$color ${downspeed wlan0} k/s ${goto 171}${color #767676}Up:$color ${upspeed wlan0} k/s
+${offset 4}${voffset 0}${color #767676}Total:$color ${totaldown wlan0} k/s ${goto 171}${color #767676}Total:$color ${totalup wlan0} k/s${endif}
+${voffset 15} Connections in:${color #606060} ${tcp_portmon 1 32767 count}$color Connections out:${color #606060} ${tcp_portmon 32768 61000 count}$color Total:${color #606060} ${tcp_portmon 1 65535 count}
+
+${color}Inbound Connection ${alignr} Local Service/Port
+${color #606060}${tcp_portmon 1 32767 rhost 0} ${alignr} ${tcp_portmon 1 32767    lservice 0}
+${tcp_portmon 1 32767 rhost 1} ${alignr} ${tcp_portmon 1 32767 lservice 1}
+${tcp_portmon 1 32767 rhost 2} ${alignr} ${tcp_portmon 1 32767 lservice 2}
+${tcp_portmon 1 32767 rhost 3} ${alignr} ${tcp_portmon 1 32767 lservice 3}
+${tcp_portmon 1 32767 rhost 4} ${alignr} ${tcp_portmon 1 32767 lservice 4}
+${tcp_portmon 1 32767 rhost 5} ${alignr} ${tcp_portmon 1 32767 lservice 5}
+
+${color}Outbound Connection ${alignr} Remote Service/Port$color
+${color #606060} ${tcp_portmon 32768 61000 rhost 0} ${alignr} ${tcp_portmon    32768 61000 rservice 0}
+${tcp_portmon 32768 61000 rhost 1} ${alignr} ${tcp_portmon 32768 61000 rservice    1}
+${tcp_portmon 32768 61000 rhost 2} ${alignr} ${tcp_portmon 32768 61000 rservice    2}
+${tcp_portmon 32768 61000 rhost 3} ${alignr} ${tcp_portmon 32768 61000 rservice    3}
+${tcp_portmon 32768 61000 rhost 4} ${alignr} ${tcp_portmon 32768 61000 rservice    4}
+${tcp_portmon 32768 61000 rhost 5} ${alignr} ${tcp_portmon 32768 61000 rservice    5}

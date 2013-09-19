@@ -1,0 +1,22 @@
+${voffset 5}${goto 10}${font ConkyWeather:style=Bold:size=60}${image [--datatype=WI] -p 0,40 -s 90x90}${font}
+${image $HOME/conky/pix/thermo1.png -p 0,150 -s 40x40}${goto 60}${voffset 15}${font Bitstream Vera Sans Mono:style=Bold:size=16}[--datatype=HT --hideunits --centeredwidth=3]${font}
+#/[--datatype=LT --hideunits --centeredwidth=3]
+${voffset 10}${goto 10}${image [--datatype=BI] -p 0,205 -s 45x45}${goto 50}${voffset 25}${font Bitstream Vera Sans Mono:style=Bold:size=12}[--datatype=WS --imperial]
+${goto 50}${font Bitstream Vera Sans Mono:style=Bold:size=12} [--datatype=WD]${font}  ${voffset -175}${goto 100}${color1}${font Bitstream Vera Sans Mono:style=Bold:size=15 les t}[--datatype=CT]${font}
+# datatype OB=Station / CN=Ville
+${voffset 20}${goto 120}${color3}Ville : $alignr${color1}[--datatype=CN]
+${goto 120}${color3}Pr?cipitations : $alignr${color1}[--datatype=PC --startday=0]
+${goto 120}${color3}UV : $alignr${color1}[--datatype=UI] - [--datatype=UT]
+${goto 120}${color3}Humidit? : $alignr${color1}[--datatype=HM]
+${goto 120}${color3}Point de ros?e : $alignr${color1}[--datatype=DP]
+${goto 120}${color3}Lever/Coucher : $alignr${color1}[--datatype=SR] / [--datatype=SS]
+${goto 120}${color3}Pression : $alignr${color1}[--datatype=BR] - [--datatype=BD]
+${goto 120}${color3}Lune : $alignr${color1}[--datatype=MP]
+${color1}${voffset 80}${goto 25}[--datatype=DW --startday=1 --shortweekday]${offset 64}[--datatype=DW --startday=2 --shortweekday]${offset 64}[--datatype=DW --startday=3 --shortweekday] ${offset 64}[--datatype=DW --startday=4 --shortweekday]
+${goto 30}${image [--datatype=WI --startday=1] -p 2,298 -s 60x60}
+${goto 30}${image [--datatype=WI --startday=2] -p 85,298 -s 60x60}
+${goto 30}${image [--datatype=WI --startday=3] -p 170,298 -s 60x60}
+${goto 30}${image [--datatype=WI --startday=4] -p 257,298 -s 60x60}
+${goto 18}[--datatype=HT --startday=1 --hideunits --centeredwidth=3]/[--datatype=LT --startday=1 --hideunits --centeredwidth=3]${goto 102}[--datatype=HT --startday=2 --hideunits --centeredwidth=3]/[--datatype=LT --startday=2 --hideunits --centeredwidth=3]${goto 182}[--datatype=HT --startday=3 --hideunits --centeredwidth=3]/[--datatype=LT --startday=3 --hideunits --centeredwidth=3]${goto 272}[--datatype=HT --startday=4 --hideunits --centeredwidth=3]/[--datatype=LT --startday=4 --hideunits --centeredwidth=3]
+${image [--datatype=MI] -p 160,215 -s 60x60}
+${voffset 5}${goto 5}${color3}Derni?re mise ? jour m?t?o: ${color1}[--datatype=LU]${font}

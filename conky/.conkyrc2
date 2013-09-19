@@ -1,0 +1,87 @@
+# temps pour fermer conky en seconde. 0 = toujours actif 
+total_run_times 0
+
+# affiche le texte sur la sortie standard
+out_to_console no
+
+# r?glage de la m?moire, pour ?viter le clignotement
+double_buffer yes
+# Soustraire les m?moires tampons de la m?moire utilis?e
+no_buffers yes
+text_buffer_size 2048
+
+# taux de rafraichissement de la fen?tre (en secondes)
+update_interval 1
+
+# nombre d'?chantillons ? utiliser pour calculer la moyenne d'utilisation
+cpu_avg_samples 4
+net_avg_samples 4
+
+# taille et positon
+alignment tm
+minimum_size 5 5
+maximum_width 700
+
+# ?cart avec le bord x=gauche ou droit y= haut ou bas
+gap_x 0
+gap_y 10
+
+#  afficher les ombres
+draw_shades yes
+# afficher des contours
+draw_outline no
+# contours autour des blocs de texte
+draw_borders no
+# largeur du contour
+border_width 1
+# largeur des marges
+#border_margin 4
+
+#pour que conky tourne en arri?re plan background no pour les tests
+background yes
+
+# utiliser sa propre fen?tre
+own_window yes
+#type de fen?tre : normal(avec le cadre) / override / desktop
+own_window_type override # normal / override / desktop
+#pseudo transparence si vous avez des icones sous le conky elle ne seront plus accessible une fois conky activ?
+own_window_transparent yes
+
+# Utiliser Xft (polices liss?es etc)
+use_xft yes
+#xftalpha .1
+#override_utf8_locale yes # force UTF8
+
+#police a utiliser : use_xft doit ?tre a "yes"
+xftfont Comic sans MS:size=8
+xftalpha 0.8
+# Tout le texte en majuscule
+uppercase no
+
+# Ajoute des espaces apr?s certains objets pour ?viter de les faire bouger.
+# Fonctionne uniquement avec les polices Fixes
+use_spacer right
+
+# Taille de la jauge par d?fault
+default_gauge_size 0 10
+
+# Couleurs
+default_color FFFFFF #blanc
+default_shade_color 333333
+default_outline_color black
+
+color1 e49c16 
+color2 CA0000 #rouge
+
+color6 EEEEEE
+color7 DDDDDD
+color8 CCCCCC
+color9 BBBBBB
+
+TEXT
+
+
+${color red}${font Bitstream Vera Sans Mono:style=Bold:size=14}M?t?o ${hr 2}${font}
+${color white}${font Comic sans MS:size=14}
+${execpi 7200 ~/conky/script/invisible_weather.sh}
+${voffset -35}${execpi 1800 conkyForecast --location=FRXX0282 --template=/home/didier/conky/script/myweather.template} 

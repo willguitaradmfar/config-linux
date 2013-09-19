@@ -1,0 +1,115 @@
+# temps pour fermer conky en seconde. 0 = toujours actif 
+total_run_times 0
+
+# affiche le texte sur la sortie standard
+out_to_console no
+
+# r?glage de la m?moire, pour ?viter le clignotement
+double_buffer yes
+# Soustraire les m?moires tampons de la m?moire utilis?e
+no_buffers yes
+text_buffer_size 2048
+
+# taux de rafraichissement de la fen?tre (en secondes)
+update_interval 1
+
+# nombre d'?chantillons ? utiliser pour calculer la moyenne d'utilisation
+cpu_avg_samples 4
+net_avg_samples 4
+
+# taille et positon
+alignment tr
+minimum_size 320 5
+maximum_width 320
+
+# ?cart avec le bord x=gauche ou droit y= haut ou bas
+gap_x 5
+gap_y 40
+
+#  afficher les ombres
+draw_shades yes
+# afficher des contours
+draw_outline no
+# contours autour des blocs de texte
+draw_borders no
+# largeur du contour
+border_width 1
+# largeur des marges
+border_margin 4
+
+#pour que conky tourne en arri?re plan background no pour les tests
+background yes
+
+# utiliser sa propre fen?tre
+own_window yes
+#type de fen?tre : normal(avec le cadre) / override / desktop
+own_window_type override # normal / override / desktop
+#pseudo transparence si vous avez des icones sous le conky elle ne seront plus accessible une fois conky activ?
+own_window_transparent yes
+
+# Utiliser Xft (polices liss?es etc)
+use_xft yes
+#xftalpha .1
+#override_utf8_locale yes # force UTF8
+
+#police a utiliser : use_xft doit ?tre a "yes"
+xftfont Comic sans MS:size=8
+xftalpha 0.8
+# Tout le texte en majuscule
+uppercase no
+
+# Ajoute des espaces apr?s certains objets pour ?viter de les faire bouger.
+# Fonctionne uniquement avec les polices Fixes
+use_spacer right
+
+# Taille de la jauge par d?fault
+default_gauge_size 0 100
+
+# Couleurs
+default_color FFFFFF #blanc
+default_shade_color 333333
+default_outline_color black
+
+color1 e49c16 
+color2 CA0000 #rouge
+
+color6 EEEEEE
+color7 DDDDDD
+color8 CCCCCC
+color9 BBBBBB
+
+#Lua Load
+  lua_load ~/conky/script/rings2.lua
+  lua_draw_hook_pre ring_stats
+
+TEXT
+${time %A %d %B %Y}
+${execi 86400 lsb_release -si} : ${execi 86400 lsb_release -sr} ${execi 86400 lsb_release -sc}
+$sysname : $kernel $machine ${freq_g} GHz
+Uptime : $uptime
+Conky version : $conky_version 
+
+${color black}${cpugraph cpu1}
+${color white}${voffset -26}${alignc}Core 0 : ${cpu 1}% ${exec expr `cat /sys/class/hwmon/hwmon0/device/temp1_input` / 1000}?C
+
+${color red}${cpugraph cpu2}
+${color white}${voffset -26}${alignc}Core 1 : ${cpu 2}% ${exec expr `cat /sys/class/hwmon/hwmon1/device/temp1_input` / 1000}?C
+${color white}
+#Top 3 des applications les plus gourmandes en CPU avec leur % d'utilisation, leur nom et leur PID (pour pouvoir les killer rapidement si elle s'affolent)
+${color1}${top cpu 1}% ${top name 1}${color} ${alignr}${top pid 1}
+${color1}${top cpu 2}% ${top name 2}${color} ${alignr}${top pid 2}
+${color1}${top cpu 3}% ${top name 3}${color} ${alignr}${top pid 3}
+# ${color2}GMail   :  $color${execi 300 python /home/didier/.conky/gmail.py}
+# ajout
+
+${font Ubuntu\-Title:size=15}RESEAU ${hr 2}${font}
+IP Internet : ${execpi 90 /home/didier/conky/script/ip-ext.sh}${if_existing /proc/net/route eth0}
+IP R?seau: ${addr eth0}
+${offset 138}${voffset 38}UP
+${offset 110}${voffset 10}${upspeed eth0}/s
+${offset 32}${voffset -35}Down
+${offset 15}${voffset 10}${downspeed eth0}/s 
+
+
+Uploaded: ${alignr}${totalup eth0}
+Downloaded: ${alignr}${totaldown eth0}${endif}

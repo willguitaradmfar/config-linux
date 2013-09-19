@@ -1,0 +1,105 @@
+# UBUNTU-CONKY
+# A comprehensive conky script, configured for use on
+# Ubuntu / Gnome, uses conky forecast, opacity is set in compiz
+# INCLUDES:
+background no
+use_xft yes
+xftfont HandelGotD:size=8
+xftalpha 0.5
+update_interval 1.0
+# This is the number of times Conky will update before quitting.
+# Set to zero to run forever.
+total_run_times 0
+# Create own window instead of using desktop (required in nautilus)
+own_window yes
+own_window_type panel 
+own_window_class conky
+own_window_transparent yes
+# If own_window_transparent is set to no, you can set the background colour here
+own_window_colour black
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+# Use double buffering (reduces flicker, may not work for everyone)
+double_buffer yes
+# Minimum size of text area
+minimum_size 220 260
+maximum_width 180
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders yes
+default_color #FFFFFF
+default_shade_color black
+default_outline_color green
+alignment middle_right
+# Gap between borders of screen and text
+# same thing as passing -x at command line
+################################## x is left and right, y is up and down 
+gap_x 5
+gap_y 300 
+no_buffers yes
+uppercase no
+cpu_avg_samples 2
+override_utf8_locale yes
+temperature_unit fahrenheit
+# stuff after 'TEXT' will be formatted on screen
+TEXT
+############################### BACKGROUND IMAGE ########################
+
+${image /home/lansing/.Conky/pix/fantasy-4.png -p 0,0 -s 220x1280}
+${color orange}SYSTEM ${hr 2}$color
+################################## SYSTEM ######## start of script ########
+${sysname}${offset 5}${kernel}${alignr}${machine}
+Intel(R) Celeron(R)${alignr} ${freq_g cpu0} GHz
+Uptime${alignr}${uptime}
+CPU TEMP: ${alignr}${acpitemp}?F
+##################################### STATS SECTION #######
+${color orange}${hr 2}$color 
+${alignc}HDD I/O
+${color 999967}${cpugraph 20,180 b800cc 66cc00}
+${color orange}CPU: $color${cpu cpu0}% ${if_match ${cpu}<=50}${color green}${else}${if_match ${cpu}<=70}${color yellow}${else}${if_match ${cpu}>70}${color red}${endif}${endif}${endif}${alignr}${cpubar cpu0 5,110}$color
+${color orange}RAM: $color$memperc%${alignr}${color 99cc99}${membar 5,110}$color
+${color orange}SWAP: $color$swapperc%${alignr}${color 999967}${swapbar 5,110}$color
+${color orange}ROOT: $color${fs_free_perc /}%${alignr}${color 996799}${fs_bar 5,110 /}$color 
+##################################### HDD ACTIVITY ##############################
+${color orange}MEM: $alignc $color $mem / $memmax $alignr $memperc%
+${color 99cc99}$membar $color
+${color orange}FILE SYS:${alignr}$color${fs_used /} / ${fs_size /}
+${color SlateGrey}${fs_bar /}$color
+${color orange}${hr 2}$color
+${color orange}Processes: ${color}$processes 
+${color orange}Running: ${color}$running_processes
+##################################### PROCESS ID SECTION ##############################
+${color orange}NAME ${color 999967} PID ${alignr 2}CPU%$color
+${color #ff4500}${top name 1}${alignr 4}${top pid 1} ${top cpu 1}
+${color #eeee00}${top name 2}${alignr 4}${top pid 2} ${top cpu 2}
+${color #00ee00}${top name 3}${alignr 4}${top pid 3} ${top cpu 3}
+##################################### NETWORK SECTION ##############################
+${color orange}Network ${hr 2}$color
+${color orange}WiFi NTWK: $color${alignr 4}${wireless_essid wlan0}
+${color orange}Public IP:$color${alignr 4}${execi 600 wget -q -O - checkip.dyndns.org | sed -e 's/[^[:digit:]\|.]//g'}
+${color orange}SSID:$color${alignr 4}${execi 300 /home/lansing/.scripts/essid.sh}(${addr wlan0}
+${color orange}Signal: ${wireless_link_qual wlan0}% ${alignr 4}${wireless_link_bar 8,60 wlan0}
+${color ffff00}Up-load ${alignr 4}${color 33cc33}Down-load 
+${color ffff00}${upspeed wlan0} kb/s ${color 33cc33}${alignr 4}${downspeed wlan0} kb/s
+${color ffff00}Total:${alignr 4}${color 33cc33}Total: 
+${color ffff00}${totalup wlan0}${alignr 4}${color 33cc33}${totaldown wlan0}
+################################### NETWORK GRAPH #################################
+${color 999967}${upspeedgraph wlan0 20,86 0099ff 990000} ${alignr 2}${color 999967}${downspeedgraph wlan0 20,86 33cc33 cc33cc}
+################################## BATTERY WITH COLOR GRAPH ##############################
+${color orange}${hr 2}$color 
+${color orange}${alignc}BATTERY: ${battery_percent BAT1}% ${acpiacadapter}
+${if_match ${battery_percent BAT1} <= 9}${color red}${battery_bar BAT1}}${color}${endif}${if_match ${battery_percent BAT1} >= 10}${if_match ${battery_percent BAT1} <=49}${color orange}${battery_bar BAT1}${color}${endif}${endif}${if_match ${battery_percent BAT1} >= 50}${if_match ${battery_percent BAT1} <=79}${color yellow}${battery_bar BAT1}${color}${endif}${endif}${if_match ${battery_percent BAT1} >= 80}${if_match ${battery_percent BAT1} <=99}${color green}${battery_bar BAT1}${color green}${endif}${endif}${if_match ${battery_percent BAT1} >= 100}${color green}${battery_bar BAT1}${endif}$color
+############### THIS IS A WEATHER SECTION IN PROGRESS #########################
+${font Goudy Bookletter 1911:style=Bold}WEATHER${font} ${hr 2}
+${alignc}Location: ${execi 3600 conkyForecast --location=USVA0797 --datatype=CN --imperial}
+${alignc}Conditions: ${execi 3600 conkyForecast --location=USVA0797 --datatype=CC --imperial}
+${color ffff99}${alignc 20}${font ConkyWeather:size=24}${execi 3600 conkyForecast --location=USVA0797 --datatype=WF --imperial}${font}$color
+${alignc}Temp: ${execi 3600 conkyForecast --location=USVA0797 --datatype=HT --imperial}
+${alignc}Extended Forecast
+${color ffff99}${font ConkyWeather:size=28}${execi 3600 conkyForecast --startday=1 --endday=3 --spaces=3 --location=USVA0797 --datatype=WF --imperial}${font}$color
+${execi 3600 conkyForecast --location=USVA0797 --startday=1 --endday=3 --spaces=15 --datatype=HT --imperial}
+${execi 3600 conkyForecast --location=USVA0797 --startday=1 --endday=3 --spaces=5 --datatype=DW --imperial}
+################################ CLCK WITH DATE ##################################
+${hr 2}$color
+${font DejaVu Serif-20}$alignc${time %-I:%M}${time %P}${font DejaVu Serif-10}${color}
+$alignc${time %A, %B %-d}
