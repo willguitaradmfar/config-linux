@@ -1,7 +1,8 @@
 sudo iptables -F 
 sudo iptables -A INPUT -d 192.241.176.21 -p tcp --destination-port 0:21 -j REJECT 
 sudo iptables -A INPUT -d 192.241.176.21 -p tcp --destination-port 23:79 -j REJECT
-sudo iptables -A INPUT -d 192.241.176.21 -p tcp --destination-port 81:8079 -j REJECT
+sudo iptables -A INPUT -d 192.241.176.21 -p tcp --destination-port 81:442 -j REJECT
+sudo iptables -A INPUT -d 192.241.176.21 -p tcp --destination-port 444:8079 -j REJECT
 sudo iptables -A INPUT -d 192.241.176.21 -p tcp --destination-port 8082:8082 -j REJECT
 sudo iptables -A INPUT -d 192.241.176.21 -p tcp --destination-port 8084:56000 -j REJECT
 sudo iptables -L
