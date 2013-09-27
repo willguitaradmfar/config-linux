@@ -1,0 +1,120 @@
+# temps pour fermer conky en seconde. 0 = toujours actif 
+total_run_times 0
+
+# affiche le texte sur la sortie standard
+out_to_console no
+
+# r?glage de la m?moire, pour ?viter le clignotement
+double_buffer yes
+# Soustraire les m?moires tampons de la m?moire utilis?e
+no_buffers yes
+text_buffer_size 2048
+imlib_cache_size 0
+
+# taux de rafraichissement de la fen?tre (en secondes)
+update_interval 1
+
+# nombre d'?chantillons ? utiliser pour calculer la moyenne d'utilisation
+cpu_avg_samples 4
+net_avg_samples 4
+
+# taille et positon
+alignment tl
+minimum_size 320 5
+maximum_width 320
+
+# ?cart avec le bord x=gauche ou droit y= haut ou bas
+gap_x 5
+gap_y 40
+
+#  afficher les ombres
+draw_shades no
+# afficher des contours
+draw_outline no
+# contours autour des blocs de texte
+draw_borders no
+# largeur du contour
+border_width 1
+# largeur des marges
+#border_margin 4
+
+#pour que conky tourne en arri?re plan background no pour les tests
+background yes
+
+# utiliser sa propre fen?tre
+own_window yes
+#type de fen?tre : normal(avec le cadre) / override / desktop
+own_window_type override # normal / override / desktop
+#pseudo transparence si vous avez des icones sous le conky elle ne seront plus accessible une fois conky activ?
+own_window_transparent yes
+
+# Utiliser Xft (polices liss?es etc)
+use_xft yes
+#xftalpha .1
+#override_utf8_locale yes # force UTF8
+
+#police a utiliser : use_xft doit ?tre a "yes"
+xftfont Comic sans MS:size=8
+xftalpha 0.8
+# Tout le texte en majuscule
+uppercase no
+
+# Ajoute des espaces apr?s certains objets pour ?viter de les faire bouger.
+# Fonctionne uniquement avec les polices Fixes
+use_spacer right
+
+# Taille de la jauge par d?fault
+default_gauge_size 0 10
+
+# Couleurs
+default_color FFFFFF #blanc
+default_shade_color 333333
+default_outline_color black
+
+color1 e49c16 
+color2 CA0000 #rouge
+
+color6 EEEEEE
+color7 DDDDDD
+color8 CCCCCC
+color9 BBBBBB
+
+#Lua Load
+lua_load ~/conky/script/rings.lua
+#lua_load ~/conky/script/text.lua
+lua_draw_hook_pre main_rings
+#lua_draw_hook_post draw_text
+
+#  lua_load ~/conky/script/rings.lua
+#  lua_draw_hook_pre ring_stats
+
+
+#   #   #   #   #   #   #
+#   INFOS A AFFICHER    #
+#   #   #   #   #   #   #
+   
+TEXT
+${voffset 110}${offset 75}${color white}${font Bitstream Charter:style=Bold:size=45}${time %H:%M}
+${voffset 109}${offset 132}${color black}${font Japan:style=Bold:size=13}MEM
+${voffset -22}${offset 32}SSD
+${voffset -22}${offset 232}HOME
+${voffset 7}${offset 110}${color white}${font Japan:style=Bold:size=10}${memperc}% ${swapperc}%
+${voffset -17}${offset 5}${fs_free /}
+${voffset -17}${offset 215}${fs_free /media/Stokage}
+${voffset 28}${color black}${font Japan:style=Bold:size=8}Proc?ssus
+${offset 120}${voffset -13}Place MEM
+${offset 210}${voffset -13}MEM %
+${voffset -13}${alignr}Proc %
+${font Japan:style=Bold:size=10}${top_mem name 1}
+${offset 120}${voffset -16}${top_mem mem_res 1}
+${offset 200}${voffset -16}${top_mem mem 1}%
+${alignr}${voffset -16}${top_mem cpu 1}%
+${font Japan:style=Bold:size=10}${top_mem name 2}
+${offset 120}${voffset -16}${top_mem mem_res 2}
+${offset 200}${voffset -16}${top_mem mem 2}%
+${alignr}${voffset -16}${top_mem cpu 2}%
+${font Japan:style=Bold:size=10}${top_mem name 3}
+${offset 120}${voffset -16}${top_mem mem_res 3}
+${offset 200}${voffset -16}${top_mem mem 3}%
+${alignr}${voffset -16}${top_mem cpu 3}%
+${voffset 25}
