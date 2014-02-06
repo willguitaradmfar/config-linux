@@ -7,7 +7,7 @@
 
 backend local {
   .host = "127.0.0.1";
-  .port = "8080";
+  .port = "3000";
 }
 
 acl purge {
@@ -16,6 +16,10 @@ acl purge {
 
 sub vcl_recv {
 	set req.backend = local;
+
+	if (req.http.Upgrade ~ "(?i)websocket") {
+         return (pipe);
+     }
 
 	if (req.request == "PURGE") {
 		if (!client.ip ~ purge) {
@@ -27,7 +31,7 @@ sub vcl_recv {
 
 	# Normalize Content-Encoding
 	if (req.http.Accept-Encoding) {
-		if (req.url ~ "\.(js|css|jpg|png|gif|gz|tgz|bz2|lzma|tbz)(\?.*|)$") {
+		if (req.url ~ "\.(js|css|jpg|png|gif|gz|tgz|bz2|lzma|tbz|woff)(\?.*|)$") {
 			remove req.http.Accept-Encoding;
 		} elsif (req.http.Accept-Encoding ~ "gzip") {
 			set req.http.Accept-Encoding = "gzip";
@@ -42,7 +46,7 @@ sub vcl_recv {
 	set req.http.Cookie = regsuball(req.http.Cookie, "(^|;\s*)(__[a-z]+|__utma_a2a|has_js)=[^;]*", "");
 
 	# Remove cookies and query string for real static files
-	if (req.url ~ "^/[^?]+\.(jpeg|jpg|png|gif|ico|js|css|sass|txt|gz|zip|lzma|bz2|tgz|tbz)(\?.*|)$") {
+	if (req.url ~ "^/[^?]+\.(jpeg|jpg|png|gif|ico|js|css|sass|txt|gz|zip|lzma|bz2|tgz|tbz|woff)(\?.*|)$") {
 		unset req.http.cookie;
 		set req.url = regsub(req.url, "\?.*$", "");
 	}
@@ -58,7 +62,7 @@ sub vcl_fetch {
 	unset beresp.http.expires;
 	set beresp.do_gzip = true;
 
-	if (req.url ~ "^/[^?]+\.(jpeg|jpg|png|gif|ico|js|css|sass|txt|gz|zip|lzma|bz2|tgz|tbz)(\?.*|)$") {
+	if (req.url ~ "^/[^?]+\.(jpeg|jpg|png|gif|ico|js|css|sass|txt|gz|zip|lzma|bz2|tgz|tbz|woff)(\?.*|)$") {
 		set beresp.http.Cache-Control = "max-age=31563000, s-maxage=31563000";
 		set beresp.ttl = 365d;
 	} else {
