@@ -57,7 +57,6 @@ sub vcl_recv {
 }
 
 sub vcl_fetch {
-	unset beresp.http.Set-Cookie;
 	unset beresp.http.Cache-Control;
 	unset beresp.http.expires;
 	set beresp.do_gzip = true;
