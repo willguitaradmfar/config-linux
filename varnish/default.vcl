@@ -47,11 +47,11 @@ sub vcl_recv {
 
 	# Remove cookies and query string for real static files
 	if (req.url ~ "^/[^?]+\.(jpeg|jpg|png|gif|ico|js|css|sass|txt|gz|zip|lzma|bz2|tgz|tbz|woff|less)(\?.*|)$") {
-		unset req.http.cookie;
+		#unset req.http.cookie;
 		set req.url = regsub(req.url, "\?.*$", "");
 	}
         if (req.url ~ "^/(evolution|accounts|tophashtags|topusers|gender).*$") {
-                unset req.http.cookie;
+                #unset req.http.cookie;
         }
 
 }
